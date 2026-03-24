@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "easyhologram",
+  "version": "${version}",
+  "name": "EasyHologram API",
+  "description": "Lightweight server-side hologram library using vanilla Display Entities",
+  "authors": [
+    "tabplus"
+  ],
+  "contact": {
+    "homepage": "https://github.com/tabplus/easyhologram",
+    "sources": "https://github.com/tabplus/easyhologram",
+    "issues": "https://github.com/tabplus/easyhologram/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/easyhologram/icon.png",
+  "environment": "*",
+  "accessWidener": "easyhologram.accesswidener",
+  "entrypoints": {
+    "main": [
+      "dev.tabplus.easyhologram.EasyHologram"
+    ]
+  },
+  "mixins": [
+    "easyhologram.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

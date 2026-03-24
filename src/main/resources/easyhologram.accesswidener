@@ -1,0 +1,13 @@
+accessWidener v2 named
+
+accessible field net/minecraft/entity/decoration/DisplayEntity BILLBOARD Lnet/minecraft/entity/data/TrackedData;
+accessible method net/minecraft/entity/decoration/DisplayEntity$BillboardMode getIndex ()B
+
+accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity TEXT Lnet/minecraft/entity/data/TrackedData;
+accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity TEXT_DISPLAY_FLAGS Lnet/minecraft/entity/data/TrackedData;
+accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity BACKGROUND Lnet/minecraft/entity/data/TrackedData;
+accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity LINE_WIDTH Lnet/minecraft/entity/data/TrackedData;
+
+accessible field net/minecraft/entity/decoration/DisplayEntity$BlockDisplayEntity BLOCK_STATE Lnet/minecraft/entity/data/TrackedData;
+
+accessible field net/minecraft/entity/decoration/DisplayEntity$ItemDisplayEntity ITEM Lnet/minecraft/entity/data/TrackedData;
