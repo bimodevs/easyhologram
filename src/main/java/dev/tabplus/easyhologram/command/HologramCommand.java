@@ -109,6 +109,17 @@ public final class HologramCommand {
                                 .executes(HologramCommand::loadFromJson)
                         )
                 )
+
+                // /hologram edit <id> settext <text>
+                .then(literal("edit")
+                        .then(argument("id", StringArgumentType.word())
+                                .then(literal("settext")
+                                        .then(argument("text", StringArgumentType.greedyString())
+                                                .executes(HologramCommand::editText)
+                                        )
+                                )
+                        )
+                )
         );
     }
 
@@ -295,6 +306,33 @@ public final class HologramCommand {
             return 0;
         }
         return 1;
+    }
+
+    private static int editText(CommandContext<ServerCommandSource> ctx) {
+        ServerCommandSource source = ctx.getSource();
+        String id = StringArgumentType.getString(ctx, "id");
+        String rawText = StringArgumentType.getString(ctx, "text");
+
+        HologramManager manager = EasyHologram.getManager();
+        if (manager == null) {
+            sendError(source, "Hologram manager is not initialized.");
+            return 0;
+        }
+
+        Hologram hologram = manager.get(id);
+        if (hologram == null) {
+            sendError(source, "Hologram '" + id + "' not found.");
+            return 0;
+        }
+
+        if (hologram instanceof TextHologram textHolo) {
+            textHolo.setText(rawText);
+            sendSuccess(source, "Text for hologram '" + id + "' updated.");
+            return 1;
+        } else {
+            sendError(source, "Hologram '" + id + "' is not a text hologram!");
+            return 0;
+        }
     }
 
     // -------------------------------------------------------------------

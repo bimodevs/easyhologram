@@ -143,6 +143,11 @@ public class HologramManager {
         for (Hologram hologram : holograms.values()) {
             if (hologram.isAlive()) {
                 hologram.tickAnimation(tickCount);
+                if (hologram.getUpdateInterval() > 0 && tickCount % hologram.getUpdateInterval() == 0) {
+                    if (hologram.getUpdateListener() != null) {
+                        hologram.getUpdateListener().accept(hologram);
+                    }
+                }
                 HologramEvents.ON_TICK.invoker().onTick(hologram, tickCount);
             }
         }

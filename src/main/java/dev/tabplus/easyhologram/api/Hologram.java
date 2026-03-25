@@ -3,6 +3,7 @@ package dev.tabplus.easyhologram.api;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.UUID;
 
@@ -14,6 +15,12 @@ import java.util.UUID;
  */
 public abstract class Hologram {
 
+    public enum ClickType { LEFT, RIGHT }
+
+    public interface ClickListener {
+        void onClick(ServerPlayerEntity player, ClickType type);
+    }
+
     protected final String id;
     protected Vec3d position;
     protected ServerWorld world;
@@ -24,6 +31,19 @@ public abstract class Hologram {
     // The underlying vanilla entity. Null until spawn() is called.
     protected Entity displayEntity;
 
+    protected final java.util.Set<UUID> viewers = new java.util.HashSet<>();
+    protected boolean globalVisibility = true;
+
+    protected ClickListener clickListener;
+    protected float interactionWidth = 0.0f;
+    protected float interactionHeight = 0.0f;
+
+    protected int updateInterval = 0;
+    protected java.util.function.Consumer<Hologram> updateListener = null;
+
+    protected int interpolationDuration = 0;
+    protected int teleportDuration = 0;
+
     protected Hologram(String id, ServerWorld world, Vec3d position) {
         this.id = id;
         this.world = world;
@@ -31,6 +51,7 @@ public abstract class Hologram {
         this.persistent = true;
         this.alive = false;
         this.animation = HologramAnimation.NONE;
+        this.clickListener = null;
     }
 
     // -------------------------------------------------------------------
@@ -51,6 +72,16 @@ public abstract class Hologram {
         displayEntity.refreshPositionAndAngles(
                 position.x, position.y, position.z, 0f, 0f
         );
+
+        if (interactionWidth > 0 && interactionHeight > 0) {
+            net.minecraft.nbt.NbtCompound nbt = new net.minecraft.nbt.NbtCompound();
+            displayEntity.writeNbt(nbt);
+            net.minecraft.nbt.NbtCompound interaction = new net.minecraft.nbt.NbtCompound();
+            interaction.putFloat("width", interactionWidth);
+            interaction.putFloat("height", interactionHeight);
+            nbt.put("interaction", interaction);
+            displayEntity.readNbt(nbt);
+        }
 
         world.spawnEntity(displayEntity);
         alive = true;
@@ -176,5 +207,94 @@ public abstract class Hologram {
 
     public UUID getEntityUuid() {
         return displayEntity != null ? displayEntity.getUuid() : null;
+    }
+
+    public ClickListener getClickListener() {
+        return clickListener;
+    }
+
+    public void setClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+    public void setInteractionSize(float width, float height) {
+        this.interactionWidth = width;
+        this.interactionHeight = height;
+        
+        if (alive && displayEntity != null) {
+            net.minecraft.nbt.NbtCompound nbt = new net.minecraft.nbt.NbtCompound();
+            displayEntity.writeNbt(nbt);
+            net.minecraft.nbt.NbtCompound interaction = new net.minecraft.nbt.NbtCompound();
+            interaction.putFloat("width", interactionWidth);
+            interaction.putFloat("height", interactionHeight);
+            nbt.put("interaction", interaction);
+            displayEntity.readNbt(nbt);
+        }
+    }
+
+    public int getUpdateInterval() {
+        return updateInterval;
+    }
+
+    public void setUpdateInterval(int updateInterval) {
+        this.updateInterval = updateInterval;
+    }
+
+    public java.util.function.Consumer<Hologram> getUpdateListener() {
+        return updateListener;
+    }
+
+    public void setUpdateListener(java.util.function.Consumer<Hologram> updateListener) {
+        this.updateListener = updateListener;
+    }
+
+    public void addViewer(UUID uuid) {
+        viewers.add(uuid);
+        globalVisibility = false;
+    }
+
+    public void removeViewer(UUID uuid) {
+        viewers.remove(uuid);
+        if (viewers.isEmpty()) {
+            globalVisibility = true;
+        }
+    }
+
+    public boolean canSee(UUID uuid) {
+        if (globalVisibility) return true;
+        return viewers.contains(uuid);
+    }
+    
+    public void setGlobalVisibility(boolean global) {
+        this.globalVisibility = global;
+    }
+
+    public void setInterpolationDuration(int duration) {
+        this.interpolationDuration = duration;
+        if (alive && displayEntity != null) {
+            net.minecraft.nbt.NbtCompound nbt = new net.minecraft.nbt.NbtCompound();
+            displayEntity.writeNbt(nbt);
+            nbt.putInt("interpolation_duration", duration);
+            nbt.putInt("start_interpolation", 0);
+            displayEntity.readNbt(nbt);
+        }
+    }
+
+    public int getInterpolationDuration() {
+        return interpolationDuration;
+    }
+
+    public void setTeleportDuration(int duration) {
+        this.teleportDuration = duration;
+        if (alive && displayEntity != null) {
+            net.minecraft.nbt.NbtCompound nbt = new net.minecraft.nbt.NbtCompound();
+            displayEntity.writeNbt(nbt);
+            nbt.putInt("teleport_duration", duration);
+            displayEntity.readNbt(nbt);
+        }
+    }
+
+    public int getTeleportDuration() {
+        return teleportDuration;
     }
 }

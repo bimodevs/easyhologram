@@ -32,6 +32,9 @@ public class EasyHologram implements ModInitializer {
         // Регистрируем команды для отладки
         CommandRegistrationCallback.EVENT.register(HologramCommand::register);
 
+        // Регистрируем события кликов по голограммам
+        dev.tabplus.easyhologram.event.InteractionListener.register();
+
         // Когда сервер стартует — создаем менеджер
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             manager = new HologramManager(server);
