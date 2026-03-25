@@ -1,6 +1,15 @@
 <h1 align="center">EasyHologram API</h1>
 <p align="center"><strong>The Definitive Server-Side Hologram Framework for Minecraft 1.21 (Fabric)</strong></p>
 
+<p align="center">
+  <a href="https://modrinth.com/mod/easyhologram"><img src="https://img.shields.io/modrinth/v/easyhologram?logo=modrinth&label=version&color=00AF5C&style=for-the-badge" alt="Modrinth Version"/></a>
+  <a href="https://curseforge.com/minecraft/mc-mods/easyhologram"><img src="https://img.shields.io/badge/CurseForge-v1.1.0-E67E22?logo=curseforge&style=for-the-badge" alt="CurseForge Version"/></a>
+  <a href="https://github.com/bimodevs/easyhologram"><img src="https://img.shields.io/github/v/release/bimodevs/easyhologram?logo=github&label=version&color=333333&style=for-the-badge" alt="GitHub Version"/></a>
+  <br>
+  <a href="https://modrinth.com/mod/easyhologram"><img src="https://img.shields.io/modrinth/dt/easyhologram?logo=modrinth&label=downloads&color=00AF5C&style=for-the-badge" alt="Modrinth Downloads"/></a>
+  <a href="https://github.com/bimodevs/easyhologram"><img src="https://img.shields.io/github/license/bimodevs/easyhologram?logo=github&color=333333&style=for-the-badge" alt="License"/></a>
+</p>
+
 EasyHologram leverages vanilla **Display Entities** to deliver a robust, strictly packet-free, and highly performant API for rendering holograms. Built on pure modern Minecraft architecture.
 
 ---
@@ -42,7 +51,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation 'com.github.tabplus:easyhologram:1.0.0'
+    modImplementation 'com.github.tabplus:easyhologram:1.1.0'
 }
 ```
 
