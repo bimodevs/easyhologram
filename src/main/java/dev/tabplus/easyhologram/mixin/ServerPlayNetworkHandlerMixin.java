@@ -10,15 +10,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ServerPlayNetworkHandler.class)
+@Mixin(net.minecraft.server.network.ServerCommonNetworkHandler.class)
 public abstract class ServerPlayNetworkHandlerMixin {
-
-    @Shadow public ServerPlayerEntity player;
 
     @Inject(method = "sendPacket(Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
     private void easyhologram$onSendPacket(Packet<?> packet, CallbackInfo ci) {
-        if (VisibilityFilter.shouldIntercept(packet, this.player)) {
-            ci.cancel();
+        if ((Object) this instanceof ServerPlayNetworkHandler handler) {
+            if (VisibilityFilter.shouldIntercept(packet, handler.player)) {
+                ci.cancel();
+            }
         }
     }
 }
